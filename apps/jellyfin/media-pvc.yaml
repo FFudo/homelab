@@ -6,7 +6,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: smb-media
   resources:
     requests:
-      storage: 100Gi
+      storage: 1Ti
+  volumeName: media-samba-pv
+  storageClassName: ""
