@@ -12,8 +12,8 @@ spec:
     helm:
       values: |
         nfs:
-          server: 10.0.0.3  # Replace with your NFS server IP or hostname
-          path: /mnt/user/kubernetes  # Replace with your NFS export path
+          server: 10.0.0.3
+          path: /mnt/user/kubernetes
         storageClass:
           name: nfs-client
           defaultClass: true

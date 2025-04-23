@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: csi-driver-smb
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/kubernetes-csi/csi-driver-smb.git
+    targetRevision: master
+    path: charts/csi-driver-smb
+
+    helm:
+      values: |
+        controller:
+          runOnControlPlane: true
+        linux:
+          kubelet: "/var/lib/rancher/k3s/agent/kubelet"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
