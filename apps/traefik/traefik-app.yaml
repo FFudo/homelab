@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: traefik
+    repoURL: https://traefik.github.io/charts
+    targetRevision: 35.0.1
+    helm:
+      values: |
+        ports:
+          web:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+                permanent: true
+        ingressRoute:
+          dashboard:
+            enabled: true
+            entryPoints: [web, websecure]
+            matchRule: Host(`traefik-dashboard.home.ffudo.me`)
+        service:
+          spec:
+            loadBalancerIP: "10.0.0.53"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
