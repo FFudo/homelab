@@ -14,4 +14,4 @@ spec:
         - name: jellyfin
           port: 8096
   tls:
-    secretName: nginx-certificate-secret
+    secretName: jellyfin-certificate-secret
