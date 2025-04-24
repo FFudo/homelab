@@ -21,7 +21,6 @@ spec:
           volumeMounts:
             - name: media
               mountPath: /media
-              read_only: true
             - name: jellyfin-config
               mountPath: /cache
       volumes:
