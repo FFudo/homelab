@@ -5,5 +5,3 @@ metadata:
   namespace: argocd
 data:
     server.insecure: "true"
-    accounts.readonly: apiKey
-    policy.overlay.csv: "g, readonly, role:readonly"
