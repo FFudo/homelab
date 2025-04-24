@@ -24,6 +24,8 @@ spec:
           volumeMounts:
             - name: homepage-config
               mountPath: /app/config
+            - name: homepage-config
+              mountPath: /app/public/images
       volumes:
         - name: homepage-config
           persistentVolumeClaim:
