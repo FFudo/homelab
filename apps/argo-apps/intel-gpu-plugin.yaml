@@ -10,7 +10,6 @@ spec:
     repoURL: https://github.com/intel/intel-device-plugins-for-kubernetes
     targetRevision: ">=v0.32.0"
     path: deployments/gpu_plugin/overlays/nfd_labeled_nodes
-
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
@@ -18,4 +17,4 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true  
+      selfHeal: true
