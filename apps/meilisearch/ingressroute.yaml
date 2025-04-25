@@ -1,0 +1,17 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: meilisearch-ingressroute
+  namespace: meilisearch
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`search.home.ffudo.me`)
+      kind: Rule
+      services:
+        - name: meilisearch
+          port: 7700
+  tls:
+    secretName: meilisearch-certificate-secret
