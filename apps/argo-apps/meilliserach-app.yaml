@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: meilisearch
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/meilisearch/meilisearch-kubernetes.git
+    targetRevision: ">=v1.13.0"
+    chart: meilisearch
+    helm:
+      releaseName: meilisearch
+      values: |
+        auth:
+          existingMasterKeySecret: meili-master-key
+        ingress:
+          enabled: true
+          className: traefik
+          annotations:
+            kubernetes.io/ingress.class: traefik
+            traefik.ingress.kubernetes.io/router.entrypoints: web
+            traefik.ingress.kubernetes.io/router.middlewares: meili-strip-prefix@kubernetescrd
+          hosts:
+            - host: search.home.ffudo.me
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - search.home.ffudo.me
+              secretName: meilisearch-certificate-secret
+
+        persistence:
+          enabled: true
+          size: 20Gi
+          accessMode: ReadWriteMany
+          storageClass: nfs-client
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: meilisearch
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
