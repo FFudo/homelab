@@ -8,8 +8,8 @@ spec:
 
   source:
     repoURL: https://github.com/meilisearch/meilisearch-kubernetes.git
-    targetRevision: ">=v1.13.0"
-    chart: meilisearch
+    targetRevision: main
+    path: charts/meilisearch
     helm:
       releaseName: meilisearch
       values: |
