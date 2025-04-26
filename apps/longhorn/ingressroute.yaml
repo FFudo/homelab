@@ -11,7 +11,7 @@ spec:
     - match: Host(`longhorn.home.ffudo.me`)
       kind: Rule
       services:
-        - name: longhorn
-          port: 3000
+        - name: longhorn-frontend
+          port: 80
   tls:
     secretName: longhorn-certificate-secret
