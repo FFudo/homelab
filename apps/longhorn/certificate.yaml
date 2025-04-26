@@ -5,7 +5,7 @@ metadata:
   name: longhorn-certificate 
   namespace: longhorn-system 
 spec:
-  secretName: linkwarden-certificate-secret 
+  secretName: longhorn-certificate-secret 
   issuerRef:
     name: cloudlfare-clusterissuer
     kind: ClusterIssuer
