@@ -13,7 +13,7 @@ spec:
       releaseName: pgadmin
       values: |                            
         envVarsFromSecrets: 
-          -pgadmin-env
+          - pgadmin-env
         persistentVolume:
           enabled: true
           storageClass: longhorn           
