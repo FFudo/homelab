@@ -32,6 +32,10 @@ spec:
             service:
               type: LoadBalancer
               loadBalancerIP: 10.0.0.55
+              ports:
+                - port: 5432
+                  targetPort: 5432
+                  protocol: TCP
     # =============== Ressources ===============
     - repoURL: https://github.com/FFudo/homelab
       targetRevision: main  
