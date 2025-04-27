@@ -16,6 +16,12 @@ spec:
       helm:
         releaseName: postgres
         values: |
+          global:
+            postgresql:
+              auth:
+                existingSecret: postgres-env
+                secretKeys: 
+                  adminPasswordKey: password
           primary:
             persistence:
               enabled: true
