@@ -24,7 +24,8 @@ spec:
                 - ReadWriteOnce                    
               size: 8Gi
             service:
-              type: ClusterIP
+              type: LoadBalancer
+              loadBalancerIP: 10.0.0.55
     # =============== Ressources ===============
     - repoURL: https://github.com/FFudo/homelab
       targetRevision: main  
