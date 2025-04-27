@@ -1,17 +1,16 @@
 apiVersion: traefik.io/v1alpha1
-kind: IngressRouteTCP
+kind: IngressRoute
 metadata:
-  name: postgresql-tcp-ingress
+  name: postgres-ingressroute
   namespace: postgres
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: postgres
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    cert-manager.io/cluster-issuer: cloudlfare-clusterissuer
 spec:
   entryPoints:
-    - postgres
+    - websecure
   routes:
-    - match: HostSNI(`postgres.home.ffudo.me`)
+    - match: Host(`postgres.home.ffudo.me`)
+      kind: Rule
       services:
         - name: postgres
           port: 5432
+  tls:
+    secretName: postgres-certificate-secret
