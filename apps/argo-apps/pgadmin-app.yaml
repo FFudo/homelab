@@ -12,7 +12,8 @@ spec:
     helm:
       releaseName: pgadmin
       values: |                            
-        envVarsFromSecrets: pgadmin-env 
+        envVarsFromSecrets: 
+          - secretName: pgadmin-env 
         persistentVolume:
           enabled: true
           storageClass: longhorn           
