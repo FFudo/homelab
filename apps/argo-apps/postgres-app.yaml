@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgres
+  sources:
+  # =============== Helm Chart ===============
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: postgresql                              
+      targetRevision: ">=16.6.6"                         
+      helm:
+        releaseName: postgres
+        values: |
+          primary:
+            persistence:
+              enabled: true
+              storageClass: longhorn               
+              accessModes:
+                - ReadWriteOnce                    
+              size: 8Gi
+            service:
+              type: ClusterIP
+    # =============== Ressources ===============
+    - repoURL: https://github.com/FFudo/homelab
+      targetRevision: main  
+      path: apps/postgres 
+  # =============== Sync policy ===============
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

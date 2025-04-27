@@ -1,0 +1,17 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: postgres-ingressroute
+  namespace: postgres
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`postgres.home.ffudo.me`)
+      kind: Rule
+      services:
+        - name: postgres
+          port: 5432
+  tls:
+    secretName: postgres-certificate-secret
