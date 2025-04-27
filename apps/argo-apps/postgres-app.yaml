@@ -19,9 +19,8 @@ spec:
           global:
             postgresql:
               auth:
-                existingSecret: postgres-env
-                secretKeys: 
-                  adminPasswordKey: password
+                postgresPassword: "password"
+                database: "postgres"
           primary:
             persistence:
               enabled: true
