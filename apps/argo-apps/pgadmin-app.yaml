@@ -12,9 +12,7 @@ spec:
     helm:
       releaseName: pgadmin
       values: |                            
-        env:
-          email: "admin@example.com"       
-          password: "SuperSecretPass!"     
+        envVarsFromSecrets: pgadmin-env 
         persistentVolume:
           enabled: true
           storageClass: longhorn           
