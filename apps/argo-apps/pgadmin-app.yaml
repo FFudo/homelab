@@ -24,6 +24,7 @@ spec:
           enabled: true
           annotations:
             kubernetes.io/ingress.class: "traefik"             
+            cert-manager.io/cluster-issuer: "cloudlfare-clusterissuer" 
           hosts:
             - host: postgres.home.ffudo.me
               paths:
@@ -31,8 +32,8 @@ spec:
                   pathType: Prefix
           tls:
             - secretName: postgres-certificate-secret
-        service:
-          type: ClusterIP                
+              hosts:
+                - postgres.home.ffudo.me             
 
   destination:
     server: https://kubernetes.default.svc

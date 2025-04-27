@@ -19,8 +19,10 @@ spec:
           global:
             postgresql:
               auth:
-                postgresPassword: "password"
-                database: "postgres"
+                database: postgres
+                existingSecret: postgres-env
+                secretKeys:
+                  adminPasswordKey: password
           primary:
             persistence:
               enabled: true
@@ -31,12 +33,6 @@ spec:
             service:
               type: LoadBalancer
               loadBalancerIP: 10.0.0.55
-              ports:
-                postgresql: 5432
-    # =============== Ressources ===============
-    - repoURL: https://github.com/FFudo/homelab
-      targetRevision: main  
-      path: apps/postgres 
   # =============== Sync policy ===============
   syncPolicy:
     automated:
