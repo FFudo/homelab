@@ -5,7 +5,7 @@ metadata:
   namespace: commafeed
 spec:
   replicas: 1
-  selector: 
+  selector:
     matchLabels:
       app: commafeed
   template:
@@ -17,13 +17,13 @@ spec:
         - name: commafeed
           image: athou/commafeed:latest-postgresql
           volumeMounts:
-          - name: commafeed-config
-            mountPath: /commafeed/data
+            - name: commafeed-config
+              mountPath: /commafeed/data
           envFrom:
             - secretRef:
-              name: commafeed-env 
+                name: commafeed-env
           ports:
-          - containerPort: 8082
+            - containerPort: 8082
       volumes:
         - name: commafeed-config
           persistentVolumeClaim:
