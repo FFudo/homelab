@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commafeed
+  namespace: commafeed
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: commafeed
+  template:
+    metadata:
+      labels:
+        app: commafeed
+    spec:
+      containers:
+        - name: commafeed
+          image: athou/commafeed:latest-postgresql
+          volumeMounts:
+          - name: commafeed-config
+            mountPath: /commafeed/data
+          envFrom:
+          - secretRef:
+            name: commafeed-env 
+          ports:
+          - containerPort: 8082
+      volumes:
+        - name: commafeed-config
+          persistentVolumeClaim:
+            claimName: commafeed-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: commafeed-pvc
+  namespace: commafeed
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: commafeed
+  namespace: commafeed
+spec:
+  selector:
+    app: commafeed
+  ports:
+    - name: http
+      port: 8082
+      targetPort: 8082
+  type: ClusterIP
+---
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: commafeed-ingressroute
+  namespace: commafeed
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`commafeed.home.ffudo.me`)
+      kind: Rule
+      services:
+        - name: commafeed
+          port: 8082
+  tls:
+    secretName: commafeed-certificate-secret
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: commafeed-certificate 
+  namespace: commafeed 
+spec:
+  secretName: commafeed-certificate-secret 
+  issuerRef:
+    name: cloudlfare-clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+    - commafeed.home.ffudo.me
