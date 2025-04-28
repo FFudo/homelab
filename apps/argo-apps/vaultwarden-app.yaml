@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vaultwarden
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vaultwarden
+  sources:
+  # =============== Helm Chart ===============
+    - repoURL: https://guerzon.github.io/vaultwarden
+      chart: vaultwarden                           
+      targetRevision: ">=0.31.8"                      
+      helm:
+        releaseName: vaultwarden
+        values: |
+          database:
+            type: postgresql
+            existingSecret: vaultwarden-creds
+            existingSecretKey: DATABASE_URL
+          domain: https://vaultwarden.home.ffudo.me
+          adminToken:
+            existingSecret: vaultwarden-creds
+            existingSecretKey: ADMIN_TOKEN
+          ingress:
+            enabled: true
+            hostname: vaultwarden.home.ffudo.me
+            class: traefik
+            annotations:
+              kubernetes.io/ingress.class: traefik
+            tls: true
+            tlsSecret: vaultwarden-certificate-secret 
+          data:
+            name: vaultwarden-data
+            size: 10Gi
+            class: longhorn
+
+    - repoURL: https://github.com/FFudo/homelab
+      targetRevision: main
+      path: apps/vaultwarden 
+
+  # =============== Sync policy ===============
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
