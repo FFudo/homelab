@@ -20,7 +20,7 @@ spec:
           - name: commafeed-config
             mountPath: /commafeed/data
           envFrom:
-            secretRef:
+            - secretRef:
               name: commafeed-env 
           ports:
           - containerPort: 8082
