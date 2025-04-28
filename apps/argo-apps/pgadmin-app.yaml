@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://helm.runix.net    
-    chart: pgadmin4                       
-    targetRevision: ">=1.39.2"              
+    repoURL: https://helm.runix.net
+    chart: pgadmin4 
+    targetRevision: ">=1.39.2"           
     helm:
       releaseName: pgadmin
       values: |                            
@@ -36,7 +36,6 @@ spec:
             - secretName: postgres-certificate-secret
               hosts:
                 - postgres.home.ffudo.me             
-
   destination:
     server: https://kubernetes.default.svc
     namespace: postgres                  
