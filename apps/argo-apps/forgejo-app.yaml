@@ -10,7 +10,7 @@ spec:
     namespace: forgejo
   sources:
   # =============== Helm Chart ===============
-    - repoURL: code.forgejo.org/forgejo-helm/forgejo
+    - repoURL: code.forgejo.org/forgejo-helm/
       chart: forgejo                             
       targetRevision: 12.3.0                        
       helm:
