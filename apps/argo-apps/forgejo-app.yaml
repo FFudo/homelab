@@ -12,7 +12,7 @@ spec:
   # =============== Helm Chart ===============
     - repoURL: code.forgejo.org/forgejo-helm
       chart: forgejo                             
-      targetRevision: 12.3.0                        
+      targetRevision: 12.2.0                        
       helm:
         releaseName: forgejo
         values: |
