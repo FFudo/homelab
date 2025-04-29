@@ -26,8 +26,8 @@ spec:
               - host: forgejo.home.ffudo.me
             tls: 
               - hosts:
-                - forgejo.home.ffudo.me
-              secretName: forgejo-certificate-secret 
+                  - forgejo.home.ffudo.me
+                secretName: forgejo-certificate-secret 
           persistence: 
             enabled: true
             storageClass: longhorn
