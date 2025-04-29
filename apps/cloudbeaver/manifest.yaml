@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudbeaver
+  namespace: cloudbeaver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudbeaver
+  template:
+    metadata:
+      labels:
+        app: cloudbeaver
+    spec:
+      containers:
+        - name: cloudbeaver
+          image: dbeaver/cloudbeaver:latest
+          volumeMounts:
+            - name: cloudbeaver-config
+              mountPath: /opt/cloudbeaver/workspace
+          ports:
+            - containerPort: 8978
+      volumes:
+        - name: cloudbeaver-config
+          persistentVolumeClaim:
+            claimName: cloudbeaver-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cloudbeaver-pvc
+  namespace: cloudbeaver
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 8Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cloudbeaver
+  namespace: cloudbeaver
+spec:
+  selector:
+    app: cloudbeaver
+  ports:
+    - name: http
+      port: 8978
+      targetPort: 8978
+  type: ClusterIP
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: cloudbeaver-ingressroute
+  namespace: cloudbeaver
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`cloudbeaver.home.ffudo.me`)
+      kind: Rule
+      services:
+        - name: cloudbeaver
+          port: 8978
+  tls:
+    secretName: cloudbeaver-certificate-secret
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cloudbeaver-certificate 
+  namespace: cloudbeaver 
+spec:
+  secretName: cloudbeaver-certificate-secret 
+  issuerRef:
+    name: cloudlfare-clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+    - cloudbeaver.home.ffudo.me
