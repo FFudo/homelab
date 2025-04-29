@@ -1,0 +1,62 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: forgejo
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: forgejo
+  sources:
+  # =============== Helm Chart ===============
+    - repoURL: code.forgejo.org/forgejo-helm/forgejo
+      chart: forgejo                             
+      targetRevision: 12.3.0                        
+      helm:
+        releaseName: forgejo
+        values: |
+          ingress:
+            enabled: true
+            className: traefik
+            annotations:
+              - kubernetes.io/ingress.class: traefik
+              - cert-manager.io/cluster-issuer: cloudlfare-clusterissuer
+            hosts[0]:
+              host: forgejo.home.ffudo.me
+            tls: 
+              - hosts:
+                - forgejo.home.ffudo.me
+              secretName: forgejo-certificate-secret 
+          persistence: 
+            enabled: true
+            storageClass: longhorn
+            size: 10Gi
+            accessModes:
+              - ReadWriteOnce
+          postgresql:
+            enabled: false
+          redis-cluster:
+            enabled: true
+          gitea:
+            admin:
+              existingSecret: forgejo-env
+            config:
+              database:
+                DB_TYPE: postgres
+                HOST: 10.0.0.55:5432
+                NAME: forgejo
+                USER: forgejo
+            additionalConfigFromEnvs:
+              - name: FORGEJO__DATABASE__PASSWD
+                valueFrom:
+                  secretKeyRef:
+                    name: forgejo-env
+                    key: password
+  # =============== Sync policy ===============
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
